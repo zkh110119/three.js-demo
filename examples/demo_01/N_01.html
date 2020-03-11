@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>N_01</title>
+    <style>
+        body {
+            position: absolute;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<script type="text/javascript" src="three.js"></script>
+<script>
+    window.onload = function () {
+        // 创建场景
+        var scene = new THREE.Scene();
+        /**
+         * 创建相机
+         * param1:视野角度
+         * param2:长宽比
+         * param3:近截面
+         * param4:远截面
+         * @type {PerspectiveCamera}
+         */
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // 创建渲染器
+        var renderer = new THREE.WebGLRenderer();
+        // 设置场景大小，第三个参数为UpdateStyle,UpdateStyle设置为false可以保持你的应用程序的尺寸，但是以较低的分辨率来渲染
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+        drawBox(scene, camera);
+
+        animate(renderer, scene, camera);
+    };
+
+    function drawBox(scene, camera) {
+        var geometry = new THREE.BoxGeometry(1, 1, 1);
+        var material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        var cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+
+        camera.position.z = 5;
+    }
+
+    function animate(renderer, scene, camera) {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+</script>
+</body>
+</html>

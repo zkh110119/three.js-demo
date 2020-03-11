@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebGL坐标系—投影</title>
+</head>
+<body>
+<canvas id="webgl" width="500" height="500" style="background-color: blue"></canvas>
+<script id="vertexShader" type="x-shader/x-vertex">
+    attribute vec4 apos;
+    void main(){
+        gl_Position = apos;
+    }
+
+</script>
+
+<script id="fragmentShader" type="x-shader/x-fragment">
+    void main(){
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+
+</script>
+
+<script>
+    var canvas = document.getElementById('webgl');
+    var gl = canvas.getContext('webgl');
+
+    var vertexShaderSource = document.getElementById('vertexShader').innerText;
+    var fragmentShaderSource = document.getElementById('fragmentShader').innerText;
+
+    var program = initShader(gl, vertexShaderSource, fragmentShaderSource);
+    var aposLocation = gl.getAttribLocation(program, 'apos');
+    var data = new Float32Array([
+        0.0, 0.0, 1.0,//三角形顶点1坐标
+        0.0, 1.0, 0.0,//三角形顶点2坐标
+        1.0, 0.0, 0.0//三角形顶点3坐标
+    ]);
+
+    var buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(aposLocation, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(aposLocation);
+    gl.drawArrays(gl.LINE_LOOP, 0, 3);
+
+
+    function initShader(gl, vertexShaderSource, fragmentShaderSource) {
+        var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+        var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+
+        gl.shaderSource(vertexShader, vertexShaderSource);
+        gl.shaderSource(fragmentShader, fragmentShaderSource);
+
+        gl.compileShader(vertexShader);
+        gl.compileShader(fragmentShader);
+
+        var program = gl.createProgram();
+
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+
+        gl.linkProgram(program);
+        gl.useProgram(program);
+
+        return program;
+
+
+    }
+</script>
+</body>
+</html>
